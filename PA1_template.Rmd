@@ -3,6 +3,13 @@
 
 ## Loading and preprocessing the data
 
+```{r echo=TRUE}
+data <- read.csv("activity", header = TRUE, sep = ",", na.strings="NA"
+                 colClass=c("numeric","character","numeric"))
+```
+```{r echo=TRUE}
+data$date <- strptime(data$date, "%m/%d/%Y")
+```
 
 
 ## What is mean total number of steps taken per day?
