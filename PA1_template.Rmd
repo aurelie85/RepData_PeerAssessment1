@@ -18,7 +18,7 @@ data <- read.csv("activity.csv", header = TRUE, sep = ",", na.strings="NA",
 ```{r echo=TRUE}
 #Create a new dataset without the missing values
 dataclean = data[!is.na(data$steps), ]
-#Aggregate this new dataset by steps
+#Aggregate this new dataset by sum of steps on each day
 sumStep = aggregate(steps~date, dataclean, sum)
 #Plot the number of steps
 hist(sumStep$steps, col ="pink", main="Total number of steps taken each day", xlab="Number of steps each day")
@@ -33,10 +33,29 @@ median
 ```
 
 ## What is the average daily activity pattern?
+# Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
+```{r echo = TRUE}
+#Aggregate the dataset without the missing values by mean of steps for each interval
+meanStep = aggregate(steps~interval, dataclean, FUN="mean")
+#Plot the intervals on the x-axis and the averaged steps on the y-axis
+plot(meanStep$interval, meanStep$steps, type = "l", col = "pink",
+     main = "Average number of steps on each interval",
+     xlab = "5-minutes intervals",
+     ylab = "averaged steps")
+
+```
+#Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+```{r echo=TRUE}
+max.steps <- meanStep[which.max(meanStep$steps),1]
+max.steps
+##[1] 835
+```
 
 
 ## Imputing missing values
+# Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 
 
