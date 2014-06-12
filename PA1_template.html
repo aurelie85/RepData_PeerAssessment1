@@ -180,6 +180,8 @@ hljs.initHighlightingOnLoad();
 <body>
 <h1>Reproducible Research: Peer Assessment 1</h1>
 
+<h1></h1>
+
 <h2>Loading and preprocessing the data</h2>
 
 <pre><code class="r"># Read the &#39;activity.csv&#39; file, from the &#39;activity.zip&#39; file, which I
@@ -253,9 +255,54 @@ max.steps
 
 <h2>Imputing missing values</h2>
 
-<ol>
+<ul>
 <li>Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)</li>
-</ol>
+</ul>
+
+<pre><code class="r">missingValues &lt;- nrow(data[is.na(data$steps), ])
+missingValues
+</code></pre>
+
+<pre><code>## [1] 2304
+</code></pre>
+
+<ul>
+<li>Devise a strategy for filling in all of the missing values in the dataset and create a new dataset that is equal to the original dataset but with the missing data filled in.</li>
+</ul>
+
+<pre><code class="r"># As you remember, there are the &#39;steps&#39; variables that are missing, not the
+# interval variables. I don&#39;t know if it&#39;s a good strategy but i&#39;ve chosen
+# to fill the missing values with the mean of the intervals&#39;days on which
+# the steps are missing.
+datafull &lt;- data
+for (i in 1:nrow(datafull)) {
+    if (is.na(datafull$steps[i])) {
+        datafull$steps[i] &lt;- mean(data$interval)
+    }
+}
+</code></pre>
+
+<ul>
+<li>Report the mean and median total number of steps taken per day</li>
+</ul>
+
+<pre><code class="r"># Aggregate this new dataset by sum of steps on each day
+sumStepfull = aggregate(steps ~ date, datafull, sum)
+# Calculate the mean and reporte the value
+mean = mean(sumStepfull$steps)
+mean
+</code></pre>
+
+<pre><code>## [1] 53829
+</code></pre>
+
+<pre><code class="r"># Calculate the median and reporte the value
+median = median(sumStepfull$steps)
+median
+</code></pre>
+
+<pre><code>## [1] 11458
+</code></pre>
 
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 

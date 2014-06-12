@@ -1,5 +1,5 @@
 # Reproducible Research: Peer Assessment 1
-
+==========================================
 
 ## Loading and preprocessing the data
 
@@ -54,8 +54,40 @@ max.steps
 
 
 ## Imputing missing values
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
+* Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+```{r echo=TRUE}
+missingValues <- nrow(data[is.na(data$steps), ])
+missingValues
+```
 
+* Devise a strategy for filling in all of the missing values in the dataset and create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+```{r echo=TRUE}
+# As you remember, there are the "steps" variables that are missing, not the interval variables. I don't know if it's a good strategy but i've chosen to fill the missing values with the mean of the intervals'days on which the steps are missing.
+datafull <- data
+for (i in 1:nrow(datafull)) {
+        if (is.na(datafull$steps[i])) {
+                datafull$steps[i] <- mean(data$interval)
+        }
+}
+```
+
+* Report the mean and median total number of steps taken per day
+
+```{r echo = TRUE}
+#Aggregate this new dataset by sum of steps on each day
+sumStepfull = aggregate(steps~date, datafull, sum)
+#Calculate the mean and reporte the value
+mean = mean(sumStepfull$steps)
+mean
+#Calculate the median and reporte the value
+median = median(sumStepfull$steps)
+median
+
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+
