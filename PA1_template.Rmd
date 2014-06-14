@@ -87,7 +87,28 @@ median
 
 ```
 
+Wooow, maybe it's not a good strategy to fill the missing value the mean of the intervals'days on which the steps are missing. As you can see, the mean and the median are much more high than with the previous "dataset" without the missing values.
+
 ## Are there differences in activity patterns between weekdays and weekends?
+* Create a new factor variable in the dataset with two levels – "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
+```{r echo = TRUE}
+# Set the local system time.
+Sys.setlocale(category = "LC_ALL", locale = "C")
 
+datafull$weektime <- as.factor(ifelse(weekdays(datafull$date) %in% c("Saturday","Sunday"),"weekend", "weekday"))
+```
+* Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
+```{r echo = TRUE}
+#Aggregate the dataset by mean of steps for each interval
+meanStep2 = aggregate(datafull$steps, by=list(datafull$interval, datafull$weektime), 
+                      FUN="mean")
+names(meanStep2) <- c("interval", "weektime", "steps")
+#Make the plot
+library(lattice)
+xyplot(meanStep2[, 3]~meanStep2[, 1]|meanStep2[, 2], 
+   type="l", col ="pink", ylab="Number of steps", xlab="Interval", layout = c(1,2))
+```
+
+On week-ends, there are more variation. On the weekdays, there are more steps, especially at the beginning of the day but with then less variation and less steps than for the week-end.
